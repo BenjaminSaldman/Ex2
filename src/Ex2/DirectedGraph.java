@@ -10,14 +10,13 @@ import java.util.Iterator;
 public class DirectedGraph implements DirectedWeightedGraph {
     private HashMap<Integer, NodeData> nodes;
     private HashMap<Integer, HashMap<Integer, EdgeData>> edges;
-    static int count = 0;
+    private int count ;
     private int MC;
-    private int self;
 
     public DirectedGraph() {
         edges = new HashMap<Integer, HashMap<Integer, EdgeData>>();
         nodes = new HashMap<Integer, NodeData>();
-        self = count;
+        count=0;
         MC = 0;
     }
 
@@ -75,26 +74,54 @@ public class DirectedGraph implements DirectedWeightedGraph {
 
     @Override
     public NodeData removeNode(int key) {
-        return null;
+        NodeData n=nodes.get(key);
+        if(n!=null)
+        {
+           Iterator<NodeData> k=nodeIter();
+           while(k.hasNext())
+           {
+               NodeData temp=k.next();
+               if(edges.get(temp.getKey()).get(key)!=null)
+                   this.removeEdge(temp.getKey(),key);
+           }
+           Iterator<EdgeData> e=edgeIter(key);
+           while(e.hasNext())
+           {
+               EdgeData temp=e.next();
+               this.removeEdge(key, temp.getDest());
+               e=edgeIter(key);
+           }
+           edges.remove(key,edges.get(key));
+           nodes.remove(key,n);
+            MC++;
+        }
+        return n;
     }
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
-        return null;
+        EdgeData e=this.getEdge(src,dest);
+        if(e!=null)
+        {
+            edges.get(src).remove(dest,e);
+            count--;
+            MC++;
+        }
+        return e;
     }
 
     @Override
     public int nodeSize() {
-        return 0;
+        return nodes.size();
     }
 
     @Override
     public int edgeSize() {
-        return 0;
+        return count;
     }
 
     @Override
     public int getMC() {
-        return 0;
+        return MC;
     }
 }

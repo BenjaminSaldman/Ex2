@@ -88,6 +88,7 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms{
             return null;
         List<NodeData>ans =new LinkedList<NodeData>();
         double min=Double.MAX_VALUE;
+        List<NodeData>l=new LinkedList<NodeData>();
         NodeData start= cities.get(0);
         cities.remove(0);
         int curr=0;
@@ -98,13 +99,18 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms{
             {
                 if(shortestPathDist(start.getKey(), cities.get(i).getKey())<min){
                     min=shortestPathDist(start.getKey(), cities.get(i).getKey());
+                    l=shortestPath(start.getKey(),cities.get(i).getKey());
                     curr=i;
                 }
             }
             start=cities.get(curr);
-            cities.remove(curr);
             min=Double.MAX_VALUE;
-            ans.add(start);
+            for (int i=0;i<l.size();i++)
+            {
+                ans.add(l.get(i));
+                cities.remove(l.get(i));
+            }
+
         }
         return ans;
     }

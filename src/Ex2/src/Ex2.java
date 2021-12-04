@@ -1,7 +1,7 @@
 package Ex2.src;
 
-import api.DirectedWeightedGraph;
-import api.DirectedWeightedGraphAlgorithms;
+import Ex2.src.api.DirectedWeightedGraph;
+import Ex2.src.api.DirectedWeightedGraphAlgorithms;
 
 /**
  * This class is the main class for Ex2 - your implementation will be tested using this class.

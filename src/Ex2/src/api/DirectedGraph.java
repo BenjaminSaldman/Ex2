@@ -3,27 +3,28 @@ import Ex2.src.api.DirectedWeightedGraph;
 import Ex2.src.api.EdgeData;
 import Ex2.src.api.NodeData;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
 public class DirectedGraph implements DirectedWeightedGraph {
     private HashMap<Integer, NodeData> nodes;
     private HashMap<Integer, HashMap<Integer, EdgeData>> edges;
-    private int count ;
+    private int count;
     private int MC;
 
     public DirectedGraph() {
         edges = new HashMap<Integer, HashMap<Integer, EdgeData>>();
         nodes = new HashMap<Integer, NodeData>();
-        count=0;
+        count = 0;
         MC = 0;
     }
-    public DirectedGraph(DirectedWeightedGraph graph){
-        Iterator<NodeData>e=graph.nodeIter();
-        while(e.hasNext())
-        {
-            NodeData temp=e.next();
-            NodeData n=new Node(temp);
+
+    public DirectedGraph(DirectedWeightedGraph graph) {
+        Iterator<NodeData> e = graph.nodeIter();
+        while (e.hasNext()) {
+            NodeData temp = e.next();
+            NodeData n = new Node(temp);
             this.addNode(n);
         }
     }
@@ -70,8 +71,9 @@ public class DirectedGraph implements DirectedWeightedGraph {
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        HashMap<Integer,EdgeData>k= (HashMap<Integer, EdgeData>) edges.values();
-        return k.values().iterator();
+        if (edges.isEmpty())
+            return null;
+        return edgeIter(0);
     }
 
     @Override
@@ -82,25 +84,22 @@ public class DirectedGraph implements DirectedWeightedGraph {
 
     @Override
     public NodeData removeNode(int key) {
-        NodeData n=nodes.get(key);
-        if(n!=null)
-        {
-           Iterator<NodeData> k=nodeIter();
-           while(k.hasNext())
-           {
-               NodeData temp=k.next();
-               if(edges.get(temp.getKey()).get(key)!=null)
-                   this.removeEdge(temp.getKey(),key);
-           }
-           Iterator<EdgeData> e=edgeIter(key);
-           while(e.hasNext())
-           {
-               EdgeData temp=e.next();
-               this.removeEdge(key, temp.getDest());
-               e=edgeIter(key);
-           }
-           edges.remove(key,edges.get(key));
-           nodes.remove(key,n);
+        NodeData n = nodes.get(key);
+        if (n != null) {
+            Iterator<NodeData> k = nodeIter();
+            while (k.hasNext()) {
+                NodeData temp = k.next();
+                if (edges.get(temp.getKey()).get(key) != null)
+                    this.removeEdge(temp.getKey(), key);
+            }
+            Iterator<EdgeData> e = edgeIter(key);
+            while (e.hasNext()) {
+                EdgeData temp = e.next();
+                this.removeEdge(key, temp.getDest());
+                e = edgeIter(key);
+            }
+            edges.remove(key, edges.get(key));
+            nodes.remove(key, n);
             MC++;
         }
         return n;
@@ -108,10 +107,9 @@ public class DirectedGraph implements DirectedWeightedGraph {
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
-        EdgeData e=this.getEdge(src,dest);
-        if(e!=null)
-        {
-            edges.get(src).remove(dest,e);
+        EdgeData e = this.getEdge(src, dest);
+        if (e != null) {
+            edges.get(src).remove(dest, e);
             count--;
             MC++;
         }
@@ -131,5 +129,15 @@ public class DirectedGraph implements DirectedWeightedGraph {
     @Override
     public int getMC() {
         return MC;
+    }
+
+    public String toString() {
+        String ans = " ";
+        Iterator<NodeData> e = nodeIter();
+        while (e.hasNext()) {
+            ans += e.next().getInfo();
+        }
+
+        return ans;
     }
 }

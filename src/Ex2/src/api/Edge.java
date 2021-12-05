@@ -4,35 +4,37 @@ import Ex2.src.api.NodeData;
 public class Edge implements Ex2.src.api.EdgeData {
     private int src,dst;
     private double weight;
+    private String info;
     public Edge(int src, int dst, double weight)
     {
         this.src=src;
         this.dst=dst;
         this.weight=weight;
+        info="Src: "+src +"Dest: "+dst+" "+"Weight: "+weight;
     }
     @Override
     public int getSrc() {
-        return 0;
+        return src;
     }
 
     @Override
     public int getDest() {
-        return 0;
+        return dst;
     }
 
     @Override
     public double getWeight() {
-        return 0;
+        return weight;
     }
 
     @Override
     public String getInfo() {
-        return null;
+        return info ;
     }
 
     @Override
     public void setInfo(String s) {
-
+        info=s;
     }
 
     @Override

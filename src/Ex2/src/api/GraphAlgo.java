@@ -1,5 +1,12 @@
 package Ex2.src.api;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -117,11 +124,31 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms{
 
     @Override
     public boolean save(String file) {
-        return false;
+        Gson gson=new GsonBuilder().create();
+        String json=gson.toJson(this.g);
+        try{
+            PrintWriter pw= new PrintWriter(new File(file));
+            pw.write(json);
+            pw.close();
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public boolean load(String file) {
-        return false;
+        try {
+            GsonBuilder Gbuilde = new GsonBuilder();
+            Gbuilde.registerTypeAdapter(DirectedWeightedGraph.class, new fromJson());
+            Gson gson = Gbuilde.create();
+            FileReader fr = new FileReader(file);
+            this.g=gson.fromJson(fr,DirectedWeightedGraph.class);
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

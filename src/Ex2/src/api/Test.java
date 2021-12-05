@@ -3,8 +3,10 @@ package Ex2.src.api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.PrintWriter;
 
 public class Test {
     public static void main(String[] args)
@@ -21,5 +23,17 @@ public class Test {
 
         }
         System.out.println(g.toString());
+
+        Gson gson=new GsonBuilder().create();
+        String json=gson.toJson(g);
+        try{
+            PrintWriter pw= new PrintWriter(new File("L.json"));
+            pw.write(json);
+            pw.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        }
     }
 }

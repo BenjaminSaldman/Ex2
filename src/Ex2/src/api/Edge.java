@@ -1,7 +1,7 @@
 package Ex2.src.api;
-import Ex2.src.api.NodeData;
 
-public class Edge implements Ex2.src.api.EdgeData {
+
+public class Edge implements EdgeData {
     private int src,dst;
     private double weight;
     private String info;

@@ -2,7 +2,7 @@ package Ex2.src.api;
 
 import Ex2.src.api.GeoLocation;
 
-public class Node implements Ex2.src.api.NodeData{
+public class Node implements NodeData{
     static int tag=0;
     private int personalTag;
     private int ID;

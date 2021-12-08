@@ -1,14 +1,19 @@
 package Ex2.src.api;
 
-public class Location implements GeoLocation {
-    private double x, y, z;
+/**
+ * This Class represents a geographic location and implement's the methods of GeoLocation.
+ */
 
+public class Location implements GeoLocation {
+    private double x, y, z; //Coordinates in the space.
+
+    /**
+     *
+     * @return representative string.
+     */
     @Override
     public String toString() {
-        return
-                "x=" + x +
-                        ", y=" + y +
-                        ", z=";
+        return ""+x+","+y+","+z+",";
     }
 
     public Location(double x, double y, double z) {
@@ -38,6 +43,11 @@ public class Location implements GeoLocation {
         return z;
     }
 
+    /**
+     *
+     * @param g
+     * @return the distance from another location.
+     */
     @Override
     public double distance(GeoLocation g) {
         return Math.sqrt((Math.pow(x - g.x(), 2) + Math.pow(y - g.y(), 2) + Math.pow(z - g.z(), 2)));

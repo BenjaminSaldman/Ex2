@@ -1,10 +1,13 @@
 package Ex2.src.api;
 
-
+/**
+ * This Class Represent an edge on graph, it implements the methods
+ * of "EdgeData".
+ */
 public class Edge implements EdgeData {
-    private int src,dst;
-    private double weight;
-    private String info;
+    private int src,dst; //Src and dst node (id's).
+    private double weight; //Weight of the node.
+    private String info; //Representative String.
     public Edge(int src, int dst, double weight)
     {
         this.src=src;
@@ -12,21 +15,38 @@ public class Edge implements EdgeData {
         this.weight=weight;
         info="Src: "+src +"Dest: "+dst+" "+"Weight: "+weight;
     }
+
+    /**
+     *
+     * @return the src node id.
+     */
     @Override
     public int getSrc() {
         return src;
     }
 
+    /**
+     *
+     * @return the Destination node id.
+     */
     @Override
     public int getDest() {
         return dst;
     }
 
+    /**
+     *
+     * @return the weight of the Edge.
+     */
     @Override
     public double getWeight() {
         return weight;
     }
 
+    /**
+     *
+     * @return the info of the edge.
+     */
     @Override
     public String getInfo() {
         return info ;
@@ -44,6 +64,6 @@ public class Edge implements EdgeData {
 
     @Override
     public void setTag(int t) {
-
+        return;
     }
 }

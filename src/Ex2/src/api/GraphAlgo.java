@@ -2,11 +2,9 @@ package Ex2.src.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -124,14 +122,14 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms{
 
     @Override
     public boolean save(String file) {
-        Gson gson=new GsonBuilder().create();
-        String json=gson.toJson(this.g);
-        try{
-            PrintWriter pw= new PrintWriter(new File(file));
-            pw.write(json);
-            pw.close();
+        Gson gson=new GsonBuilder().setPrettyPrinting().create();
+        String json=gson.toJson(g);
+        JsonObject finalOutput=JsonFiler.WriteToJson(g);
+        try (FileWriter File = new FileWriter(file)) {
+            File.write(gson.toJson(finalOutput));
+            File.flush();
             return true;
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
@@ -139,16 +137,14 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms{
 
     @Override
     public boolean load(String file) {
-        try {
-            GsonBuilder Gbuilde = new GsonBuilder();
-            Gbuilde.registerTypeAdapter(DirectedWeightedGraph.class, new fromJson());
-            Gson gson = Gbuilde.create();
-            FileReader fr = new FileReader(file);
-            this.g=gson.fromJson(fr,DirectedWeightedGraph.class);
+        try{
+            this.g= JsonFiler.ReadFromJson(file);
             return true;
-        } catch (FileNotFoundException e) {
+        }catch (IOException e){
             e.printStackTrace();
             return false;
+
         }
     }
+
 }

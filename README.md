@@ -1,11 +1,11 @@
 # Ex2 Direceted Graphs Algorithms
 This program represents a directed graph using data structures and enables graphical display to the user.
 ### The capabilities that the program supports are:
-*Create a directed graph.
-*Run algorithms on directed graph.
-*Save a graph into json file.
-*Load a graph from json file.
-*Graphical display of graph and algorithms.
+* Create a directed graph.
+* Run algorithms on directed graph.
+* Save a graph into json file.
+* Load a graph from json file.
+* Graphical display of graph and algorithms.
 ## Interfaces
 * DirectedWeightedGraph 
 * DirectedWeightedGraphAlgorithms

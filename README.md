@@ -54,7 +54,6 @@ This class implement the methods of DirectedWeightedGraphAlgorithms.
 * DirectedWeightedGraph g - The graph we run the methods on.
 ##### Inner classes:
 * private class AlgoNode - Special type of data structure, used for dijkstra algorithm and contains: NodeData, distance, id and boolean visited.
-* private class comp implements Comparator<AlgoNode> - Comparator that compares between the the distance of 2 AlgoNode object.
 ##### Methods: 
  * private HashMap<Integer, AlgoNode> Dijkstra(AlgoNode src, AlgoNode dest) - return HashMap of nodes that in the path between src to dest.
  * private void InitNotVisited(DirectedWeightedGraph g) - Initialize all graph vertices tag to 0 ("Not Visited") - For BFS.

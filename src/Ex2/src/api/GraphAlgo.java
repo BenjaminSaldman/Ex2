@@ -15,50 +15,44 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms {
     private class AlgoNode {
         NodeData n;
         double dist;
-        boolean visited;
         int id;
 
         public AlgoNode(NodeData n) {
             this.n = n;
             this.dist = Double.MAX_VALUE;
-            visited = false;
             id = n.getKey();
         }
     }
 
     /**
-     * Comparator that compare between the distances from the source.
+     *
+     * @param src
+     * @param dest
+     * @return map contains the nodes of the shortest path between src to dest, using Dijkstra algorithm.
      */
-    private class comp implements Comparator<AlgoNode> {
-
-        @Override
-        public int compare(AlgoNode o1, AlgoNode o2) {
-            return Double.compare(o1.dist, o2.dist);
-        }
-    }
-
     private HashMap<Integer, AlgoNode> Dijkstra(AlgoNode src, AlgoNode dest) {
-        HashMap<Integer, AlgoNode> ans = new HashMap<Integer, AlgoNode>();
-        HashMap<Integer, AlgoNode> dist = new HashMap<Integer, AlgoNode>();
-        comp compare = new comp();
-        PriorityQueue<AlgoNode> q = new PriorityQueue(compare);
-        src.dist = 0;
+        HashMap<Integer, AlgoNode> ans = new HashMap<Integer, AlgoNode>(); //Shortest path from src to dest.
+        HashMap<Integer, AlgoNode> dist = new HashMap<Integer, AlgoNode>(); //d[v] - all the sources map.
+        //Priority queue that holds the min distance AlgoNode each time.
+        PriorityQueue<AlgoNode> q = new PriorityQueue(new Comparator<AlgoNode>() {
+            @Override
+            public int compare(AlgoNode o1, AlgoNode o2) {
+                return Double.compare(o1.dist, o2.dist);
+            }
+        });
+        src.dist = 0; //Start point - distance =0.
         q.add(src);
         while (!(q.isEmpty())) {
-            AlgoNode node = q.poll();
-            if (q.peek() != null && q.peek().dist < node.dist) {//double check to avoid mistake in the order
-                q.add(node);
-                node = q.poll();
-            }
-            node.n.setTag(1);
-            if (node.equals(dest)) {
+            AlgoNode node = q.poll(); // Get the least distance node.
+            node.n.setTag(1);   //Set visited to true.
+            if (node.equals(dest)) { //Return the answer if the current node is the destination.
                 return ans;
             }
-            Iterator<EdgeData> e = this.g.edgeIter(node.id);
+            Iterator<EdgeData> e = this.g.edgeIter(node.id); //For every e-(u,v).
             while (e.hasNext()) {
                 EdgeData edge = e.next();
-                NodeData curr = this.g.getNode(edge.getDest());
-                if (curr.getKey() == dest.id) {
+                NodeData curr = this.g.getNode(edge.getDest()); //Check current destination.
+                if (curr.getKey() == dest.id) { //If the current node is the id, check if he has shorter path to him.
                     double w = edge.getWeight() + node.dist;
                     if (w < dest.dist) {
                         dest.dist = w;
@@ -69,15 +63,15 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms {
                             q.add(dest);
                         }
                     }
-                } else {
+                } else { //Else, we got other node.
                     AlgoNode algoNode;
-                    if (!dist.containsKey(curr.getKey())) {
+                    if (!dist.containsKey(curr.getKey())) { //If we discovered a new node, add it to the sources.
                         algoNode = new AlgoNode(curr);
                         dist.put(algoNode.id, algoNode);
                     } else {
-                        algoNode = dist.get(curr.getKey());
+                        algoNode = dist.get(curr.getKey()); //else, get him from the map.
                     }
-                    if (algoNode.n.getTag() == 0) {
+                    if (algoNode.n.getTag() == 0) { //If not visited the current node update his weight.
                         double w = edge.getWeight() + node.dist;
                         if (w < algoNode.dist) {
                             algoNode.dist = w;
@@ -114,6 +108,11 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms {
         return g1;
     }
 
+    /**
+     *
+     * @param g
+     * Initialize the nodes status to not visited.
+     */
     private void InitNotVisited(DirectedWeightedGraph g) {
         Iterator<NodeData> e = g.nodeIter();
         while (e.hasNext()) {
@@ -122,6 +121,11 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms {
         }
     }
 
+    /**
+     *
+     * @return true if the graph is strongly connected.
+     * Using BFS 2 times one on the original graph and the other to the transpose graph..
+     */
     @Override
     public boolean isConnected() {
         if (this.g == null)
@@ -150,6 +154,12 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms {
         return true;
     }
 
+    /**
+     *
+     * @param start
+     * @param g
+     * BFS searches on given graph.
+     */
     private void BFS(int start, DirectedWeightedGraph g) {
         Queue<NodeData> q = new LinkedList<NodeData>();
         NodeData n = g.getNode(start);
@@ -168,6 +178,11 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms {
         }
     }
 
+    /**
+     *
+     * @param graph
+     * @return the transpose graph.
+     */
     private DirectedWeightedGraph transpose(DirectedWeightedGraph graph) {
         DirectedWeightedGraph tr = new DirectedGraph();
         Iterator<NodeData> e = graph.nodeIter();
@@ -186,7 +201,12 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms {
         return tr;
     }
 
-
+    /**
+     *
+     * @param src - start node
+     * @param dest - end (target) node
+     * @return shortestPathDist between the source to the destination.
+     */
     @Override
     public double shortestPathDist(int src, int dest) {
         if (src == dest)
@@ -204,6 +224,12 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms {
         return b.dist;
     }
 
+    /**
+     *
+     * @param src - start node
+     * @param dest - end (target) node
+     * @return shortestPath between src to dest.
+     */
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
         InitNotVisited(this.g);
@@ -218,7 +244,6 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms {
         LinkedList<NodeData> ans = new LinkedList<>();
         ans.add(node);
         while (node != this.g.getNode(src) && node != null) {
-
             node = map.get(aNode.id).n;
             ans.addFirst(node);
             aNode = map.get(aNode.id);
@@ -226,27 +251,33 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms {
         return ans;
     }
 
-
+    /**
+     *
+     * @return the center of the graph.
+     */
     @Override
     public NodeData center() {
         double ave = 0;
-        int n = this.g.nodeSize();
         double min = Double.MAX_VALUE;
         NodeData ans = null;
         Iterator<NodeData> e = this.g.nodeIter();
+        double currMax=0;
         while (e.hasNext()) {
             NodeData curr = e.next();
             Iterator<NodeData> e2 = this.g.nodeIter();
             while (e2.hasNext()) {
                 NodeData next = e2.next();
-                ave += (shortestPathDist(curr.getKey(), next.getKey()) / n);
+                ave = shortestPathDist(curr.getKey(), next.getKey());
+                if(ave>currMax)
+                {
+                    currMax=ave;
+                }
             }
-            if (ave < min) {
-                min = ave;
+            if (currMax < min) {
+                min = currMax;
                 ans = curr;
             }
-            ave = 0;
-
+            currMax=0;
         }
         return ans;
     }

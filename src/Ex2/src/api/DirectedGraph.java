@@ -64,6 +64,7 @@ public class DirectedGraph implements DirectedWeightedGraph {
         nodes.put(n.getKey(), n);
         HashMap<Integer, EdgeData> neigbhors = new HashMap<Integer, EdgeData>();
         edges.put(n.getKey(), neigbhors);
+
     }
 
     /**
@@ -99,7 +100,7 @@ public class DirectedGraph implements DirectedWeightedGraph {
      */
     @Override
     public Iterator<NodeData> nodeIter() {
-        return this.nodes.values().iterator();
+        return nodes.values().iterator();
     }
 
     /**

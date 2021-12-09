@@ -3,8 +3,7 @@ package Ex2.src.api;
 import Ex2.src.api.GeoLocation;
 
 public class Node implements NodeData{
-    static int tag=0;
-    private int personalTag;
+    private int tag;
     private int ID;
     private double weight;
     private GeoLocation location;
@@ -13,14 +12,12 @@ public class Node implements NodeData{
     {
         location=new Location(x,y,z);
         this.ID=ID;
-        personalTag=tag;
         weight=0;
-        tag++;
-        Info="ID: "+ID+" The Location of this node is in: "+location.toString()+ "Personal tag: "+personalTag;
+        tag=0;
+        Info="ID: "+ID+" The Location of this node is in: "+location.toString()+ "Personal tag: ";
     }
     public Node (NodeData n)
     {
-        this.personalTag=n.getTag();
         this.ID=n.getKey();
         this.weight=n.getWeight();
         this.Info=n.getInfo();

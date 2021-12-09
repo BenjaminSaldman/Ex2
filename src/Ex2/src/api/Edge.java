@@ -13,7 +13,7 @@ public class Edge implements EdgeData {
         this.src=src;
         this.dst=dst;
         this.weight=weight;
-        info="Src: "+src +"Dest: "+dst+" "+"Weight: "+weight;
+        info = "Src: " + src +", Dest: " + dst + ", Weight: "+weight;
     }
 
     /**

@@ -26,13 +26,16 @@ public class GUI_graph extends JFrame implements ActionListener {
     JMenuBar menuBar;
     JMenu Center;
     JMenu Back;
+    JMenu connected;
     JMenuItem center;
     JMenuItem back;
+    JMenuItem c;
 
     GraphP g; //JPanel inner object.
     JTextField textField; //Input text to read.
-    JButton save, load, Paths, TSP; //GUI features buttons: save and load graphs, paint the shortest paths and TSP.
+    JButton save, load, Paths, TSP, add, remove, dist; //GUI features buttons: save and load graphs, paint the shortest paths , TSP and dist.
     JLabel text; //GUI instructions.
+    JLabel isConnect;
 
     public GUI_graph(DirectedWeightedGraphAlgorithms AlgoGraph) {
 
@@ -42,40 +45,60 @@ public class GUI_graph extends JFrame implements ActionListener {
         menuBar = new JMenuBar();
         Back = new JMenu("Back");
         Center = new JMenu("Center");
+        connected = new JMenu("isConntected");
+        c = new JMenuItem("isConntected");
         center = new JMenuItem("center");
         back = new JMenuItem("back");
         center.addActionListener(this);
         back.addActionListener(this);
+        c.addActionListener(this);
         Center.add(center);
         Back.add(back);
+        connected.add(c);
         menuBar.add(Back);
         menuBar.add(Center);
+        menuBar.add(connected);
         this.setJMenuBar(menuBar);
         ////////////////////////////////////////////////////////////////////////
         //Initialization of Buttons and texts.
         textField = new JTextField();
-        textField.setBounds((int) WIDTH - 250, (int) HEIGHT / 2, 222, 20);
+        textField.setBounds((int) WIDTH - 250, (int) HEIGHT / 2 - 50, 222, 20);
         text = new JLabel();
-        text.setBounds((int) WIDTH - 250, (int) (HEIGHT / 2) - 50, 240, 20);
-        text.setText("Enter filename to save/load or <src,dst>");
+        text.setBounds((int) WIDTH - 250, (int) (HEIGHT / 2) - 100, 240, 20);
+        text.setText("Enter values");
+        isConnect = new JLabel();
+        isConnect.setBounds((int) WIDTH - 250, (int) (HEIGHT / 2) - 150, 240, 20);
         save = new JButton("Save");
         load = new JButton("Load");
         Paths = new JButton("Paths");
         TSP = new JButton("TSP-Insert Node ID's");
-        save.setBounds((int) WIDTH - 250, (int) (HEIGHT / 2) + 50, 222, 20);
-        load.setBounds((int) WIDTH - 250, (int) (HEIGHT / 2) + 100, 222, 20);
-        Paths.setBounds((int) WIDTH - 250, (int) (HEIGHT / 2) + 150, 222, 20);
-        TSP.setBounds((int) WIDTH - 250, (int) (HEIGHT / 2) + 200, 222, 20);
+        remove = new JButton("Remove Node ID");
+        add = new JButton("new node: x,y,z,id");
+        dist = new JButton("Dist: ID1,ID2");
+        save.setBounds((int) WIDTH - 250, (int) (HEIGHT / 2), 222, 20);
+        load.setBounds((int) WIDTH - 250, (int) (HEIGHT / 2) + 50, 222, 20);
+        Paths.setBounds((int) WIDTH - 250, (int) (HEIGHT / 2) + 100, 222, 20);
+        TSP.setBounds((int) WIDTH - 250, (int) (HEIGHT / 2) + 150, 222, 20);
+        remove.setBounds((int) WIDTH - 250, (int) (HEIGHT / 2) + 200, 222, 20);
+        add.setBounds((int) WIDTH - 250, (int) (HEIGHT / 2) + 250, 222, 20);
+        dist.setBounds((int) WIDTH - 250, (int) (HEIGHT / 2) + 300, 222, 20);
         save.addActionListener(this);
         load.addActionListener(this);
         Paths.addActionListener(this);
         TSP.addActionListener(this);
+        remove.addActionListener(this);
+        add.addActionListener(this);
+        dist.addActionListener(this);
         add(save);
         add(load);
         add(Paths);
         add(text);
         add(textField);
         add(TSP);
+        add(remove);
+        add(add);
+        add(dist);
+        add(isConnect);
         ///////////////////////////////////////////////////////////////////////////////////
         //Creating new Graph and adding the JPanel.
         this.AlgoGraph = AlgoGraph;
@@ -101,7 +124,8 @@ public class GUI_graph extends JFrame implements ActionListener {
                     tsp.add(this.graph.getNode(Integer.parseInt(nodes[i])));
                 }
                 List<NodeData> l = this.AlgoGraph.tsp(tsp);
-                this.g.setExternal(l);
+                this.g.external.removeAll(this.g.external);
+                this.g.setExternal(l, true);
                 this.g.repaint();
 
             } catch (Exception k) {
@@ -119,6 +143,7 @@ public class GUI_graph extends JFrame implements ActionListener {
         //Bring back to the main graph.
         if (e.getSource() == back) {
             this.g.extra = false;
+            this.isConnect.setText("");
             this.g.cent = false;
             this.g.repaint();
         }
@@ -142,6 +167,56 @@ public class GUI_graph extends JFrame implements ActionListener {
                 k.printStackTrace();
             }
         }
+        if (e.getSource() == Paths) {
+            try {
+                String[] id = textField.getText().split(",");
+                List<NodeData> l = this.AlgoGraph.shortestPath(Integer.parseInt(id[0]), Integer.parseInt(id[1]));
+                this.g.external.removeAll(this.g.external);
+                this.g.setExternal(l, false);
+                this.g.repaint();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        }
+        if (e.getSource() == remove) {
+            try {
+                String ID = textField.getText();
+                this.graph.removeNode(Integer.parseInt(ID));
+                this.g.change(this.graph);
+                this.g.repaint();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        }
+        if (e.getSource() == add) {
+            try {
+                String[] data = textField.getText().split(",");
+                NodeData n = new Node(Double.parseDouble(data[0]), Double.parseDouble(data[1]), Double.parseDouble(data[2]), Integer.parseInt(data[3]));
+                this.graph.addNode(n);
+                this.g.change(this.graph);
+                this.g.repaint();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+
+        }
+        if (e.getSource() == c) {
+            boolean check=this.AlgoGraph.isConnected();
+            if(check)
+                this.isConnect.setText("The Graph is strongly connected!");
+            else
+                this.isConnect.setText("The Graph is not connected");
+        }
+        if(e.getSource()==dist)
+        {
+            try{
+                String[] s= textField.getText().split(",");
+                double dist=this.AlgoGraph.shortestPathDist(Integer.parseInt(s[0]),Integer.parseInt(s[1]));
+                this.isConnect.setText("The distence is: "+ dist);
+            }catch (Exception e1){
+                e1.printStackTrace();
+            }
+        }
 
     }
 
@@ -156,11 +231,13 @@ public class GUI_graph extends JFrame implements ActionListener {
         List<NodeData> external; //External algorithms nodes to paint.
         boolean extra;
         boolean cent;
+        boolean tsp;
 
         public GraphP(DirectedWeightedGraph g) {
             this.g = g;
             this.cent = false;
             this.extra = false;
+            this.tsp = false;
             center = new Point2D.Double();
             points = new LinkedList<Point2D>();
             external = new LinkedList<NodeData>();
@@ -170,7 +247,6 @@ public class GUI_graph extends JFrame implements ActionListener {
                 NodeData next = n.next();
                 this.points.add(new Point2D.Double(next.getLocation().x(), next.getLocation().y()));
                 Id.add(next.getKey());
-
 
             }
         }
@@ -201,12 +277,12 @@ public class GUI_graph extends JFrame implements ActionListener {
         }
 
         /**
-         *
          * @param n set the external nodes needed to bo added.
          */
-        void setExternal(List<NodeData> n) {
+        void setExternal(List<NodeData> n, boolean tsp) {
             this.external = n;
             this.extra = true;
+            this.tsp = tsp;
         }
 
         @Override
@@ -214,7 +290,7 @@ public class GUI_graph extends JFrame implements ActionListener {
             super.paintComponent(g);
             int prevID = 0; //ID of current node.
             int k = 0; //ID counter.
-            int m=0; //ID counter.
+            int m = 0; //ID counter.
             for (Point2D p : points) {
                 //Print all the nodes in black color.
                 g.setColor(Color.BLACK);
@@ -222,20 +298,27 @@ public class GUI_graph extends JFrame implements ActionListener {
                 //Print the node ID
                 String ID = Id.get(k++) + "";
                 g.drawString(ID, (int) (scale(p.getX(), minMax()[0], minMax()[1], 0, GUI_graph.this.WIDTH / 5 + GUI_graph.this.WIDTH / 2)) + 10, (int) (scale(p.getY(), minMax()[2], minMax()[3], 0, GUI_graph.this.HEIGHT / 5 + GUI_graph.this.HEIGHT / 2) + 5));
-                for (Point2D l:points) {
+                for (Point2D l : points) {
                     //Run from current node to all other nodes and check if there is an edge between the nodes.
-                    if(l!=p) {
+                    if (l != p) {
                         if ((graph.getEdge(Id.get(prevID), Id.get(m)) != null) || graph.getEdge(Id.get(m), Id.get(prevID)) != null) {
-                           // Double dist = p.distance(prev);
-                           // g.drawLine((int) p.getX(), (int) p.getY(), (int) l.getX(), (int) l.getY());
+                            double weight = 0;
+                            if (graph.getEdge(Id.get(prevID), Id.get(m)) != null)
+                                weight = graph.getEdge(Id.get(prevID), Id.get(m)).getWeight();
+                            else
+                                weight = graph.getEdge(Id.get(m), Id.get(prevID)).getWeight();
+                            String w = weight + "";
                             g.drawLine((int) (scale(p.getX(), minMax()[0], minMax()[1], 0, GUI_graph.this.WIDTH / 5 + GUI_graph.this.WIDTH / 2)), (int) (scale(p.getY(), minMax()[2], minMax()[3], 0, GUI_graph.this.HEIGHT / 5 + GUI_graph.this.HEIGHT / 2)),
                                     (int) (scale(l.getX(), minMax()[0], minMax()[1], 0, GUI_graph.this.WIDTH / 5 + GUI_graph.this.WIDTH / 2)), (int) (scale(l.getY(), minMax()[2], minMax()[3], 0, GUI_graph.this.HEIGHT / 5 + GUI_graph.this.HEIGHT / 2)));
+//                            g.drawString(w,((int) (scale(p.getX(), minMax()[0], minMax()[1], 0, GUI_graph.this.WIDTH / 5 + GUI_graph.this.WIDTH / 2)+(int) (scale(l.getX(), minMax()[0], minMax()[1], 0, GUI_graph.this.WIDTH / 5 + GUI_graph.this.WIDTH / 2))))/2,
+//                                    ((int) (scale(p.getY(), minMax()[2], minMax()[3], 0, GUI_graph.this.HEIGHT / 5 + GUI_graph.this.HEIGHT / 2)+(int) (scale(l.getY(), minMax()[2], minMax()[3], 0, GUI_graph.this.HEIGHT / 5 + GUI_graph.this.HEIGHT / 2))))/2  ) ;
                         }
+
                     }
                     m++;
                 }
-                m=0; //Node ID counter=0;
-                prevID=k; //Current node for iteration.
+                m = 0; //Node ID counter=0;
+                prevID = k; //Current node for iteration.
 
             }
             //Print the center in Red.
@@ -245,7 +328,10 @@ public class GUI_graph extends JFrame implements ActionListener {
             }
             //Print TSP, The Shortest paths in Blue.
             if (extra) {
-                g.setColor(Color.BLUE);
+                if (tsp)
+                    g.setColor(Color.BLUE);
+                else
+                    g.setColor(Color.GREEN);
                 for (NodeData n : this.external) {
                     Point2D p = new Point2D.Double(n.getLocation().x(), n.getLocation().y());
                     g.fillOval((int) (scale(p.getX(), minMax()[0], minMax()[1], 0, GUI_graph.this.WIDTH / 5 + GUI_graph.this.WIDTH / 2) - 5), (int) (scale(p.getY(), minMax()[2], minMax()[3], 0, GUI_graph.this.HEIGHT / 5 + GUI_graph.this.HEIGHT / 2) - 5), 10, 10);
@@ -255,7 +341,6 @@ public class GUI_graph extends JFrame implements ActionListener {
         }
 
         /**
-         *
          * @param data
          * @param r_min
          * @param r_max
@@ -275,7 +360,6 @@ public class GUI_graph extends JFrame implements ActionListener {
         }
 
         /**
-         *
          * @return array that contains the minimum X,Y and maximum X,Y among the nodes.
          */
         private double[] minMax() {
@@ -302,15 +386,4 @@ public class GUI_graph extends JFrame implements ActionListener {
             return ans;
         }
     }
-
-    public static void main(String[] args) {
-        DirectedWeightedGraphAlgorithms gr = new GraphAlgo();
-        String s = "C:\\Users\\binya\\IdeaProjects\\Ex2\\src\\Ex2\\src\\api\\G3.json";
-        gr.load(s);
-        new GUI_graph(gr);
-
-
-    }
-
-
 }

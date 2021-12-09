@@ -2,6 +2,7 @@ package Ex2.src;
 
 import Ex2.src.api.DirectedWeightedGraph;
 import Ex2.src.api.DirectedWeightedGraphAlgorithms;
+import Ex2.src.api.GUI_graph;
 import Ex2.src.api.GraphAlgo;
 
 /**
@@ -30,9 +31,6 @@ public class Ex2 {
     public static DirectedWeightedGraphAlgorithms getGrapgAlgo(String json_file) {
         DirectedWeightedGraphAlgorithms ans = new GraphAlgo();
         ans.load(json_file);
-        // ****** Add your code here ******
-        //
-        // ********************************
         return ans;
     }
     /**
@@ -42,8 +40,10 @@ public class Ex2 {
      */
     public static void runGUI(String json_file) {
         DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
-        // ****** Add your code here ******
-        //
-        // ********************************
+        new GUI_graph(alg);
+    }
+    public static void main(String[] args)
+    {
+        runGUI(args[0]);
     }
 }

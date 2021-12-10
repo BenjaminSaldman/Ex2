@@ -52,10 +52,8 @@ This class represent a location in the space (x,y,z) and implement the methods o
 This class implement the methods of DirectedWeightedGraphAlgorithms.
 ##### Class Objects:
 * DirectedWeightedGraph g - The graph we run the methods on.
-##### Inner classes:
-* private class AlgoNode - Special type of data structure, used for dijkstra algorithm and contains: NodeData, distance, id and boolean visited.
 ##### Methods: 
- * private HashMap<Integer, AlgoNode> Dijkstra(AlgoNode src, AlgoNode dest) - return HashMap of nodes that in the path between src to dest.
+ * private void Dijkstra(int src) - updating nodes weight and parent by Dijkstra algorithm from source.
  * private void InitNotVisited(DirectedWeightedGraph g) - Initialize all graph vertices tag to 0 ("Not Visited") - For BFS.
  * private void BFS(int start, DirectedWeightedGraph g) - Updating the graph vertices by BFS order.
  * private DirectedWeightedGraph transpose(DirectedWeightedGraph graph) - Creating the transpose graph of given graph.

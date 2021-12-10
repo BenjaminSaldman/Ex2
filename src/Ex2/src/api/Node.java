@@ -8,6 +8,7 @@ public class Node implements NodeData{
     private double weight;
     private GeoLocation location;
     private String Info;
+    private int prev;
     public Node(double x, double y, double z, int ID)
     {
         location=new Location(x,y,z);
@@ -21,11 +22,8 @@ public class Node implements NodeData{
         this.ID=n.getKey();
         this.weight=n.getWeight();
         this.Info=n.getInfo();
-        if(n.getLocation()!=null)
-            this.location=new Location(n.getLocation());
-        else
-            this.location=null;
-
+        this.location=n.getLocation();
+        Info=n.getInfo();
     }
 
     @Override
@@ -71,5 +69,9 @@ public class Node implements NodeData{
     @Override
     public void setTag(int t) {
         tag=t;
+    }
+    public void setPrev(int prev){
+        this.prev=prev;
+
     }
 }

@@ -25,11 +25,26 @@ public class DirectedGraph implements DirectedWeightedGraph {
     }
 
     public DirectedGraph(DirectedWeightedGraph graph) {
+        edges = new HashMap<Integer, HashMap<Integer, EdgeData>>();
+        nodes = new HashMap<Integer, NodeData>();
+        this.count=0;
+        this.MC=graph.getMC();
         Iterator<NodeData> e = graph.nodeIter();
         while (e.hasNext()) {
             NodeData temp = e.next();
             NodeData n = new Node(temp);
             this.addNode(n);
+        }
+        e= graph.nodeIter();
+        while (e.hasNext())
+        {
+            NodeData temp=e.next();
+            Iterator<EdgeData>ed=graph.edgeIter(temp.getKey());
+            while (ed.hasNext()) {
+                EdgeData edge = ed.next();
+                this.connect(edge.getSrc(), edge.getDest(), edge.getWeight());
+
+            }
         }
     }
 

@@ -54,6 +54,7 @@ public class GraphAlgo implements DirectedWeightedGraphAlgorithms {
     public GraphAlgo() {
         this.g = new DirectedGraph();
     }
+    public GraphAlgo(DirectedWeightedGraph g){this.g=g;}
 
     @Override
     public void init(DirectedWeightedGraph g) {

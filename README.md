@@ -109,6 +109,18 @@ This class implement the methods of DirectedWeightedGraphAlgorithms.
   * To see if the graph is connected, click on "connected" menu and select "connected" again.
   * To undo the changes on the graph, click on "Back" menu and select "back".
   
+  # Algorithm analysis of large graphs:
+  **Note: We could'nt uploade the 100000 Nodes json file because he was too heavy**
+  
+  **The Creator class of those graphs is in Ex2/src/api/GraphCreate**
+  
+  **The Test class is Ex2/src/api/GraphCreateTest**
+  ### Analysis:
+  * 1000 Nodes: save + isConnected() + load took 542 ms, Center took 6.34 minutes.
+  * 10000 Nodes: save + isConnected() + load took 2.184 sec, Center - timeout.
+  * 100000 Nodes: save + isConnected() + load took 22.966 sec, Center - timeout.
+  * 100000 Nodes: Could'nt create this graph - Java heap space exception.
+  
   
   
 
